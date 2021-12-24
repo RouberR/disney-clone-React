@@ -1,11 +1,65 @@
 import React from "react";
 import styled from "styled-components";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../farebase";
+import { getAuth } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  selectUserName,
+  selectUserPhoto,
+  setUserLoginDetails,
+} from "../store/userSlice";
 export const Header = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const userName = useSelector(selectUserName)
+  const userPhoto = useSelector(selectUserPhoto)
+
+  const provider = new GoogleAuthProvider();
+
+  const setUser = (user) => {
+    dispatch(
+      setUserLoginDetails({
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,
+    })
+    )
+    console.log(user)
+  }
+  console.log(setUser)
+  const auth = getAuth();
+  console.log(auth)
+  const handleAuth = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        setUser(result.user)
+    
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
+
+
+
   return (
     <Nav>
       <Logo src="/images/logo.svg" />
 
-      <NavMenu>
+      {
+        !userName ? <Login onClick={handleAuth}>Login</Login> 
+        : 
+        <>
+        <NavMenu>
         <a href="/home">
           <img src="/images/home-icon.svg" alt="home" />
           <span>HOME</span>
@@ -18,7 +72,7 @@ export const Header = () => {
           <img src="/images/watchlist-icon.svg" alt="watchlist" />
           <span>WATCHLIST</span>
         </a>
-        <a href="/original-icon">
+        <a href="/original">
           <img src="/images/original-icon.svg" alt="original" />
           <span>ORIGINALS</span>
         </a>
@@ -31,7 +85,12 @@ export const Header = () => {
           <span>SERIES</span>
         </a>
       </NavMenu>
-      <Login>Login</Login>
+        <UserImg src={userPhoto} alt="UserPhoto"/>
+        </>
+      }
+
+     
+      {/* <Login onClick={handleAuth}>Login</Login> */}
     </Nav>
   );
 };
@@ -124,20 +183,25 @@ const NavMenu = styled.div`
   }
 `;
 
-
 const Login = styled.a`
-background-color: #0a1130;
-padding: 9px 18px;
-text-transform: uppercase;
-letter-spacing: 1.5px;
-border: 1px solid #f9f9f9;
-border-radius: 4px;
-transition: all 0.2s ease 0s;
+  background-color: #0a1130;
+  padding: 9px 18px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  border: 1px solid #f9f9f9;
+  border-radius: 4px;
+  transition: all 0.2s ease 0s;
 
-&:hover{
+  &:hover {
     background-color: #f9f9f9;
     color: black;
     border-color: transparent;
-}
+  }
+`;
+
+
+const UserImg = styled.img`
+height: 100%;
+
 
 `
