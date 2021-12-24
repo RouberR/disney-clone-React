@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../farebase";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import {
   selectUserName,
   selectUserPhoto,
+  setSignOutState,
   setUserLoginDetails,
 } from "../store/userSlice";
 export const Header = () => {
@@ -17,6 +18,16 @@ export const Header = () => {
   const userPhoto = useSelector(selectUserPhoto)
 
   const provider = new GoogleAuthProvider();
+
+
+  useEffect(() => {
+   auth.onAuthStateChanged(async (user) => {
+     if(user){
+       setUser(user)
+       navigate("/home")
+     }
+   })
+  }, [userName]);
 
   const setUser = (user) => {
     dispatch(
@@ -32,7 +43,8 @@ export const Header = () => {
   const auth = getAuth();
   console.log(auth)
   const handleAuth = () => {
-    signInWithPopup(auth, provider)
+    if(!userName){
+      signInWithPopup(auth, provider)
       .then((result) => {
         setUser(result.user)
     
@@ -47,6 +59,13 @@ export const Header = () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
+    } else {
+      auth.signOut().then(() => {
+        dispatch(setSignOutState())
+        navigate("/")
+      }).catch((err) => alert(err.message))
+    }
+   
   };
 
 
@@ -85,7 +104,10 @@ export const Header = () => {
           <span>SERIES</span>
         </a>
       </NavMenu>
+      <SignOut>
         <UserImg src={userPhoto} alt="UserPhoto"/>
+        <DropDown><span onClick={handleAuth}>Sign out</span></DropDown>
+        </SignOut>
         </>
       }
 
@@ -203,5 +225,49 @@ const Login = styled.a`
 const UserImg = styled.img`
 height: 100%;
 
+`
+
+
+const DropDown = styled.div`
+position:absolute;
+top: 40px;
+right: 0px;
+background: rgb(20,20,20);
+border: 1px solid #0a2230;
+padding: 10px;
+border-radius: 10px;
+font-size: 14px;
+letter-spacing: 3px;
+width: 100px;
+
+
+opacity: 0;
+
+
+`
+
+
+const SignOut = styled.div`
+position:relative;
+height: 52px;
+width: 52px;
+display:flex;
+cursor:pointer;
+align-items: center;
+justify-content: center;
+
+${UserImg}{
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+&:hover{
+  ${DropDown}{
+
+  opacity: 1;
+  transition-duration: 1s;
+  }
+
+}
 
 `
