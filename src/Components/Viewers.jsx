@@ -6,31 +6,31 @@ export const Viewers = () => {
       <Wrap>
         <img src="/images/viewers/viewers-disney.png" alt="disney" />
         <video loop={true} playsInline={true} autoPlay={true} muted={true}>
-          <source src="/videos/disney.mp4" type="video/mp4"/>
+          <source src="/videos/disney.mp4" type="video/mp4" />
         </video>
       </Wrap>
       <Wrap>
         <img src="/images/viewers/viewers-marvel.png" alt="marvel" />
         <video autoPlay={true} loop={true} playsInline={true} muted={true}>
-          <source src="/videos/marvel.mp4" type="video/mp4"/>
+          <source src="/videos/marvel.mp4" type="video/mp4" />
         </video>
       </Wrap>
       <Wrap>
-        <img src="/images/viewers/viewers-national.png" alt="national"  />
+        <img src="/images/viewers/viewers-national.png" alt="national" />
         <video autoPlay={true} loop={true} playsInline={true} muted={true}>
-          <source src="/videos/national-geographic.mp4" type="video/mp4"/>
+          <source src="/videos/national-geographic.mp4" type="video/mp4" />
         </video>
       </Wrap>
       <Wrap>
         <img src="/images/viewers/viewers-pixar.png" alt="pixar" />
         <video autoPlay={true} loop={true} playsInline={true} muted={true}>
-          <source src="/videos/pixar.mp4" type="video/mp4"/>
+          <source src="/videos/pixar.mp4" type="video/mp4" />
         </video>
       </Wrap>
       <Wrap>
         <img src="/images/viewers/viewers-starwars.png" alt="starwars" />
         <video autoPlay={true} loop={true} playsInline={true} muted={true}>
-          <source src="/videos/star-wars.mp4" type="video/mp4"/>
+          <source src="/videos/star-wars.mp4" type="video/mp4" />
         </video>
       </Wrap>
     </Container>
@@ -49,12 +49,13 @@ const Container = styled.div`
 `;
 
 const Wrap = styled.div`
- @media (max-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     width: 100%;
+    margin-top:10px;
     padding-top: 50%;
   }
-    width: 18%;
+  width: 18%;
 
   padding-top: 10%;
   border-radius: 10px;
@@ -78,26 +79,27 @@ const Wrap = styled.div`
     top: 0;
   }
   &:hover {
+    @media (max-width: 768px) {
+      transform: scale(1.02);
+  }
+
     border: 3px solid white;
     transform: scale(1.05);
 
-    video{
+    video {
       opacity: 1;
     }
   }
 
-  video{
+  video {
     width: 100%;
     height: 100%;
     inset: 0px;
     display: block;
     top: 0;
     object-fit: cover;
-   
     position: absolute;
     z-index: 0;
- 
     opacity: 0;
-
   }
 `;
