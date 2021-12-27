@@ -1,32 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from "styled-components"
+import { useSelector } from 'react-redux'
+import { selectOriginal } from '../../store/movie/movieSlice'
 
-export const Recomends = () => {
+export const Originals = () => {
+    const Originals = useSelector(selectOriginal)
     return (
         <Contaiten>
-            <h1>Recommended for You</h1>
+            <h1>Originals</h1>
             <Contant>
-                <Wrap>
+            {Originals && Originals.map(item => 
+                <Wrap key={item.id}>
                     <Link to="/">
-                        <img src="https://lumiere-a.akamaihd.net/v1/images/p_disneyplusoriginals_underthehelmetthelegacyofbobafett_411a8d39.jpeg" alt=""/>
+                        <img src={item.cardImg} alt={item.title}/>
                     </Link>
                 </Wrap>
-                <Wrap>
-                    <Link to="/">
-                        <img src="https://lumiere-a.akamaihd.net/v1/images/p_rayaandthelastdragon_21294_83346778.jpeg" alt=""/>
-                    </Link>
-                </Wrap>
-                <Wrap>
-                    <Link to="/">
-                        <img src="https://lumiere-a.akamaihd.net/v1/images/p_soul_disneyplus_v2_20907_764da65d.jpeg" alt=""/>
-                    </Link>
-                </Wrap>
-                <Wrap>
-                    <Link to="/">
-                        <img src="https://lumiere-a.akamaihd.net/v1/images/p_starwarstheriseofskywalker_19732_b0052d5f.jpeg" alt=""/>
-                    </Link>
-                </Wrap>
+           )}    
             </Contant>
         </Contaiten>
     )

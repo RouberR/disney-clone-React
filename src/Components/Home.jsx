@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { ImgSlider } from "./ImgSlider";
-import { Recomends } from "./Recomends";
+import { Recomends } from "./MovieCategory/Recomends"
+import { Originals } from "./MovieCategory/Originals"
 import { Viewers } from "./Viewers";
 
 import { useEffect } from "react";
@@ -10,6 +11,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { setMovies } from "../store/movie/movieSlice";
 import { selectUserName } from "../store/userSlice";
 import db from "../farebase";
+import { NewDisneys } from "./MovieCategory/NewDisneys";
 export const Home = () => {
   const dispatch = useDispatch();
   const userName = useSelector(selectUserName);
@@ -26,10 +28,10 @@ export const Home = () => {
         case "Recommended":
           recomends = [...recomends, { id: doc.id, ...doc.data() }];
           break;
-        case "newDisney":
+        case "NewDisneys":
           newDisneys = [...newDisneys, { id: doc.id, ...doc.data() }];
           break;
-        case "original":
+        case "Originals":
           originals = [...originals, { id: doc.id, ...doc.data() }];
           break;
         case "trending":
@@ -46,7 +48,7 @@ export const Home = () => {
     setMovies({
       recommend: recomends,
       newDisney: newDisneys,
-      otiginal: originals,
+      original: originals,
       trending: trendings,
     })
   );
@@ -62,9 +64,8 @@ export const Home = () => {
       <ImgSlider />
       <Viewers />
       <Recomends />
-      <Recomends />
-      <Recomends />
-      <Recomends />
+      <NewDisneys/>
+      <Originals/>
     </Container>
   );
 };
