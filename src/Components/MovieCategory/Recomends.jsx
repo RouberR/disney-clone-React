@@ -12,7 +12,7 @@ export const Recomends = () => {
             <Contant>
             {reccomends && reccomends.map(item => 
                 <Wrap key={item.id}>
-                    <Link to="/">
+                    <Link to={`/detail/${item.id}`}>
                         <img src={item.cardImg} alt={item.title}/>
                     </Link>
                 </Wrap>
