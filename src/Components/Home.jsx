@@ -1,17 +1,21 @@
 import React from "react";
 import styled from "styled-components";
 import { ImgSlider } from "./ImgSlider";
-import { Recomends } from "./MovieCategory/Recomends"
-import { Originals } from "./MovieCategory/Originals"
 import { Viewers } from "./Viewers";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { collection, getDocs } from "firebase/firestore";
-import { setMovies } from "../store/movie/movieSlice";
+import {
+  selectNewDisney,
+  selectOriginal,
+  selectRecommend,
+  selectTrending,
+  setMovies,
+} from "../store/movie/movieSlice";
 import { selectUserName } from "../store/userSlice";
 import db from "../farebase";
-import { NewDisneys } from "./MovieCategory/NewDisneys";
+import { Category } from "./MovieCategory/Category";
 export const Home = () => {
   const dispatch = useDispatch();
   const userName = useSelector(selectUserName);
@@ -20,7 +24,10 @@ export const Home = () => {
   let originals = [];
   let trendings = [];
 
-
+  const Trending = useSelector(selectTrending);
+  const reccomends = useSelector(selectRecommend);
+  const NewDisney = useSelector(selectNewDisney);
+  const Original = useSelector(selectOriginal);
   const getMovies = async () => {
     const querySnapshot = await getDocs(collection(db, "movies"));
     querySnapshot.docs.map((doc) => {
@@ -34,38 +41,37 @@ export const Home = () => {
         case "Originals":
           originals = [...originals, { id: doc.id, ...doc.data() }];
           break;
-        case "trending":
+        case "Trendings":
           trendings = [...trendings, { id: doc.id, ...doc.data() }];
           break;
-      default:{
-        console.log("Error: don't exist type")
-      }
+        default: {
+          console.log("Error: don't exist type");
         }
+      }
     });
- 
 
-  dispatch(
-    setMovies({
-      recommend: recomends,
-      newDisney: newDisneys,
-      original: originals,
-      trending: trendings,
-    })
-  );
-};
+    dispatch(
+      setMovies({
+        recommend: recomends,
+        newDisney: newDisneys,
+        original: originals,
+        trending: trendings,
+      })
+    );
+  };
 
   useEffect(() => {
-    getMovies()
+    getMovies();
   }, [userName]);
 
-  
   return (
     <Container>
       <ImgSlider />
       <Viewers />
-      <Recomends />
-      <NewDisneys/>
-      <Originals/>
+      <Category Title="Recommended for You" Selector={reccomends} />
+      <Category Title="New Disneys" Selector={NewDisney} />
+      <Category Title="Originals" Selector={Original} />
+      <Category Title="Trendings" Selector={Trending} />
     </Container>
   );
 };

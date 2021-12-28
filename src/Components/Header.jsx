@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../farebase";
 import { getAuth } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,108 +10,99 @@ import {
   setSignOutState,
   setUserLoginDetails,
 } from "../store/userSlice";
+import { Link } from "react-router-dom";
 export const Header = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const userName = useSelector(selectUserName)
-  const userPhoto = useSelector(selectUserPhoto)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userName = useSelector(selectUserName);
+  const userPhoto = useSelector(selectUserPhoto);
 
   const provider = new GoogleAuthProvider();
 
-
   useEffect(() => {
-   auth.onAuthStateChanged(async (user) => {
-     if(user){
-       setUser(user)
-       navigate("/home")
-     }
-   })
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        setUser(user);
+        navigate("/home");
+      }
+    });
   }, [userName]);
 
   const setUser = (user) => {
     dispatch(
       setUserLoginDetails({
-      name: user.displayName,
-      email: user.email,
-      photo: user.photoURL,
-    })
-    )
-    console.log(user)
-  }
-  console.log(setUser)
-  const auth = getAuth();
-  console.log(auth)
-  const handleAuth = () => {
-    if(!userName){
-      signInWithPopup(auth, provider)
-      .then((result) => {
-        setUser(result.user)
-    
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
       })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-    } else {
-      auth.signOut().then(() => {
-        dispatch(setSignOutState())
-        navigate("/")
-      }).catch((err) => alert(err.message))
-    }
-   
+    );
   };
-
-
+  const auth = getAuth();
+  const handleAuth = () => {
+    if (!userName) {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          setUser(result.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      auth
+        .signOut()
+        .then(() => {
+          dispatch(setSignOutState());
+          navigate("/");
+        })
+        .catch((err) => alert(err.message));
+    }
+  };
 
   return (
     <Nav>
-      <Logo src="/images/logo.svg" />
+      <Link to="/home">
+        {" "}
+        <Logo src="/images/logo.svg" />
+      </Link>
 
-      {
-        !userName ? <Login onClick={handleAuth}>Login</Login> 
-        : 
+      {!userName ? (
+        <Login onClick={handleAuth}>Login</Login>
+      ) : (
         <>
-        <NavMenu>
-        <a href="/home">
-          <img src="/images/home-icon.svg" alt="home" />
-          <span>HOME</span>
-        </a>
-        <a href="/search">
-          <img src="/images/search-icon.svg" alt="search" />
-          <span>SEARCH</span>
-        </a>
-        <a href="/watchlist">
-          <img src="/images/watchlist-icon.svg" alt="watchlist" />
-          <span>WATCHLIST</span>
-        </a>
-        <a href="/original">
-          <img src="/images/original-icon.svg" alt="original" />
-          <span>ORIGINALS</span>
-        </a>
-        <a href="/movie">
-          <img src="/images/movie-icon.svg" alt="movie" />
-          <span>MOVIES</span>
-        </a>
-        <a href="/series">
-          <img src="/images/series-icon.svg" alt="series" />
-          <span>SERIES</span>
-        </a>
-      </NavMenu>
-      <SignOut>
-        <UserImg src={userPhoto} alt="UserPhoto"/>
-        <DropDown><span onClick={handleAuth}>Sign out</span></DropDown>
-        </SignOut>
+          <NavMenu>
+            <Link to="/home">
+              <img src="/images/home-icon.svg" alt="home" />
+              <span>HOME</span>
+            </Link>
+            <a>
+              <img src="/images/search-icon.svg" alt="search" />
+              <span>SEARCH</span>
+            </a>
+            <a>
+              <img src="/images/watchlist-icon.svg" alt="watchlist" />
+              <span>WATCHLIST</span>
+            </a>
+            <a>
+              <img src="/images/original-icon.svg" alt="original" />
+              <span>ORIGINALS</span>
+            </a>
+            <a>
+              <img src="/images/movie-icon.svg" alt="movie" />
+              <span>MOVIES</span>
+            </a>
+            <a>
+              <img src="/images/series-icon.svg" alt="series" />
+              <span>SERIES</span>
+            </a>
+          </NavMenu>
+          <SignOut>
+            <UserImg src={userPhoto} alt="UserPhoto" />
+            <DropDown>
+              <span onClick={handleAuth}>Sign out</span>
+            </DropDown>
+          </SignOut>
         </>
-      }
-
-     
-      {/* <Login onClick={handleAuth}>Login</Login> */}
+      )}
     </Nav>
   );
 };
@@ -221,53 +211,43 @@ const Login = styled.a`
   }
 `;
 
-
 const UserImg = styled.img`
-height: 100%;
-
-`
-
+  height: 100%;
+`;
 
 const DropDown = styled.div`
-position:absolute;
-top: 40px;
-right: 0px;
-background: rgb(20,20,20);
-border: 1px solid #0a2230;
-padding: 10px;
-border-radius: 10px;
-font-size: 14px;
-letter-spacing: 3px;
-width: 100px;
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  background: rgb(20, 20, 20);
+  border: 1px solid #0a2230;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  width: 100px;
 
-
-opacity: 0;
-
-
-`
-
+  opacity: 0;
+`;
 
 const SignOut = styled.div`
-position:relative;
-height: 52px;
-width: 52px;
-display:flex;
-cursor:pointer;
-align-items: center;
-justify-content: center;
+  position: relative;
+  height: 52px;
+  width: 52px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
 
-${UserImg}{
-  border-radius: 50%;
-  width: 100%;
-  height: 100%;
-}
-&:hover{
-  ${DropDown}{
-
-  opacity: 1;
-  transition-duration: 1s;
+  ${UserImg} {
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
   }
-
-}
-
-`
+  &:hover {
+    ${DropDown} {
+      opacity: 1;
+      transition-duration: 1s;
+    }
+  }
+`;

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 import { getAuth } from "firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
 const firebaseConfig = {
@@ -14,26 +14,8 @@ const firebaseConfig = {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-  
-  // Get a list of cities from your database
-  // async function getCities(db) {
-  //   const citiesCol = collection(db, 'cities');
-  //   const citySnapshot = await getDocs(citiesCol);
-  //   const cityList = citySnapshot.docs.map(doc => doc.data());
-  //   return cityList;
-  // }
+
  export const auth = getAuth();
  export const provider = new GoogleAuthProvider();
  export default db;
   
-
-  // const firebaseApp = initializeApp(firebaseConfig);
-  // const db = firebaseApp.firestore();
-
-  // const auth = getAuth();
-  // const provider = new auth.GoogleAuthProvider();
-  // const storage = storage()
-
-
-  // export { auth, provider, storage}
-  // export default db;

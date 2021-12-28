@@ -52,7 +52,7 @@ const Wrap = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     width: 100%;
-    margin-top:10px;
+    margin-top: 10px;
     padding-top: 50%;
   }
   width: 18%;
@@ -81,7 +81,7 @@ const Wrap = styled.div`
   &:hover {
     @media (max-width: 768px) {
       transform: scale(1.02);
-  }
+    }
 
     border: 3px solid white;
     transform: scale(1.05);
