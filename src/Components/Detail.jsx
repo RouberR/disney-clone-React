@@ -76,6 +76,7 @@ const Background = styled.div`
 
     @media (max-width: 768px) {
       width: initial;
+    
     }
   }
 `;
